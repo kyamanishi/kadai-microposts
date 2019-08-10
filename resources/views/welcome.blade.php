@@ -2,7 +2,31 @@
 
 @section('content')
     @if (Auth::check())
-        {{ Auth::user()->name }}
+        <div class="row">
+            <aside class="col-sm-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ Auth::user()->name }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <img src="{{ Gravatar::src(Auth::user()->email, 500) }}" alt="" class="rounded img-fluid">
+                    </div>
+                </div>
+            </aside>
+            <div class="col-sm-8">
+                @if (Auth::id() == $user->id)
+                    {!! Form::open(['route' => 'microposts.store']) !!}
+                        <div class="form-group">
+                            {!! Form::textarea('content', old('content'), ['class' => 'form-control', 'rows' => '2']) !!}
+                            {!! Form::submit('Post', ['class' => 'btn btn-primary btn-block']) !!}
+                        </div>
+                    {!! Form::close() !!}
+                @endif
+                @if (count($microposts) > 0)
+                    @include('microposts.microposts', ['microposts' => $microposts])
+                @endif
+            </div>
+        </div>
     @else
         <div class="center jumbtron">
             <div class="text-center">
